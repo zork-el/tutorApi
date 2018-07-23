@@ -14,9 +14,14 @@ const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 const Users = require('./models/users');
-const url = "mongodb://localhost:27017/tutorApp";
+const url = "mongodb+srv://optimus:optimus@tutor-cluster-0yihn.mongodb.net/test?retryWrites=true";
 
 mongoose.connect(url);
+const connection = mongoose.connection;
+
+connection.on('connected', () => {
+  console.log("Connected to test db!!");
+});
 
 var app = express();
 
