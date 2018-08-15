@@ -33,6 +33,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Add headers
@@ -77,7 +78,6 @@ function auth(req, res, next) {
 }
 
 app.use('/', indexRouter);
-app.use(auth);
 app.use('/users', userRouter);
 app.use('/dishes', dishRouter);
 app.use('/promos', promoRouter);
