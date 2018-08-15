@@ -13,6 +13,7 @@ tutorRouter.route('/')
 
 // FOR /SIGN UP
 tutorRouter.route('/signup')
+    .options((req, res) => { res.sendStatus(200); })
     .post((req, res, next) => {
         tutor.findOne({ username: req.body.username }).exec()
             .then((user) => {
@@ -37,6 +38,7 @@ tutorRouter.route('/signup')
     });
 
 tutorRouter.route('/login')
+    .options((req, res) => { res.sendStatus(200); })
     .post((req, res, next) => {
         if (!req.session.user) {
             var authHeader = req.headers.authorization;
@@ -79,8 +81,9 @@ tutorRouter.route('/login')
     });
 
 tutorRouter.route('/logout')
+    .options((req, res) => { res.sendStatus(200); })
     .get((req, res) => {
-        if(req.session) {
+        if (req.session) {
             req.session.destroy();
             res.clearCookie('session-id');
             res.redirect('/');
