@@ -49,19 +49,47 @@ app.use(function (req, res, next) {
   next();
 });
 
+function auth(req, res, next) {
+  console.log(req.headers);
+
+  var authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    var err = new Error("You are Not Authenticated!");
+    res.setHeader('WWW-Authenticate', 'Basic');
+    err.status = 401;
+    return net(err);
+  }
+
+  var authUserPass = authHeader.toString.split(' ')[1]  //gets string containing username&password.
+  var auth = Buffer.from(authUserPass, 'base64').toString().split(':');    //splits authUserPass into array containing username&password.
+  var username = auth[0];
+  var password = auth[1];
+
+  if (username === 'admin' && password === 'admin') {
+    next();
+  } else {
+    var err = new Error("You are Not Authenticated!");
+    res.setHeader('WWW-Authenticate', 'Basic');
+    err.status = 401;
+    return net(err);
+  }
+}
+
 app.use('/', indexRouter);
+app.use(auth);
 app.use('/users', userRouter);
 app.use('/dishes', dishRouter);
 app.use('/promos', promoRouter);
 app.use('/leaders', leaderRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
