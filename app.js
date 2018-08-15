@@ -36,7 +36,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser('12345-67890-09876-54321'));
-
+/*
 app.use(session({
   name: 'session-id',
   secret: '12345-67890-09876-54321',
@@ -44,10 +44,10 @@ app.use(session({
   resave: false,
   store: new fileStore()
 }));
-
+*/
 app.use('/', indexRouter);
-app.use('/tutor', tutorRouter);
-
+// app.use('/tutor', tutorRouter);
+/*
 function auth(req, res, next) {
   console.log(req.session);
 
@@ -66,7 +66,7 @@ function auth(req, res, next) {
   }
 }
 
-app.use(auth);
+app.use(auth); */
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Add headers
