@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const tutor = require('../models/tutors');
 const tutorRouter = express.Router();
 
@@ -7,6 +8,7 @@ tutorRouter.use(bodyParser.json());
 
 // FOR /PROMOS
 tutorRouter.route('/')
+    .options((req, res) => { res.sendStatus(200); })
     .get((req, res, next) => {
         res.end("Respond with a Resource");
     });
