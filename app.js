@@ -32,23 +32,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(auth);
 app.use(cookieParser('12345-67890-09876-54321'));
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Add headers
-app.use(function (req, res, next) {
-
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-  // Pass to next layer of middleware
-  next();
-});
 
 function auth(req, res, next) {
   console.log(req.signedCookies);
@@ -88,6 +72,23 @@ function auth(req, res, next) {
     }
   }
 }
+
+app.use(auth);
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Add headers
+app.use(function (req, res, next) {
+
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+  // Pass to next layer of middleware
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', userRouter);
