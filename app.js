@@ -62,7 +62,7 @@ function auth(req, res, next) {
     return net(err);
   }
 
-  var authUserPass = authHeader.toString.split(' ')[1]  //gets string containing username&password.
+  var authUserPass = authHeader.toString().split(' ')[1]  //gets string containing username&password.
   var auth = Buffer.from(authUserPass, 'base64').toString().split(':');    //splits authUserPass into array containing username&password.
   var username = auth[0];
   var password = auth[1];
