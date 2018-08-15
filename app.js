@@ -9,7 +9,7 @@ var fileStore = require('session-file-store')(session);
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/userRouter');
 var dishRouter = require('./routes/dishRouter');
-var promoRouter = require('./routes/promoRouter');
+var tutorRouter = require('./routes/tutorRouter');
 var leaderRouter = require('./routes/leaderRouter');
 
 const mongoose = require('mongoose');
@@ -17,6 +17,7 @@ mongoose.Promise = require('bluebird');
 
 const Users = require('./models/users');
 const url = "mongodb+srv://optimus:optimus@tutor-cluster-0yihn.mongodb.net/test?retryWrites=true";
+const Url = "mongodb://127.0.0.1:27017/tutor"
 
 mongoose.connect(url);
 const connection = mongoose.connection;
@@ -44,40 +45,22 @@ app.use(session({
   store: new fileStore()
 }))
 
+app.use('/', indexRouter);
+app.use('/tutor', tutorRouter);
+
 function auth(req, res, next) {
   console.log(req.session);
 
   if (!req.session.user) {
-    var authHeader = req.headers.authorization;
-
-    if (!authHeader) {
-      var err = new Error("You are Not Authenticated!");
-      res.setHeader('WWW-Authenticate', 'Basic');
-      err.status = 401;
-      return next(err);
-    }
-
-    var authUserPass = authHeader.toString().split(' ')[1]  //gets string containing username:password.
-    var auth = Buffer.from(authUserPass, 'base64').toString().split(':');    //splits authUserPass into array containing username:password.
-    var username = auth[0];
-    var password = auth[1];
-
-    if (username === 'admin' && password === 'admin') {
-      req.session.user = 'admin';
+    var err = new Error("You are Not Authenticated!");
+    err.status = 403;
+    return next(err);
+  } else {
+    if (req.session.user === 'authenticated') {
       next();
     } else {
       var err = new Error("You are Not Authenticated!");
-      res.setHeader('WWW-Authenticate', 'Basic');
-      err.status = 401;
-      return next(err);
-    }
-  }
-  else {
-    if (req.session.user === 'admin') {
-      next();
-    } else {
-      var err = new Error("You are Not Authenticated!");
-      err.status = 401;
+      err.status = 403;
       return next(err);
     }
   }
@@ -100,10 +83,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/', indexRouter);
+
 app.use('/users', userRouter);
 app.use('/dishes', dishRouter);
-app.use('/promos', promoRouter);
 app.use('/leaders', leaderRouter);
 
 // catch 404 and forward to error handler
