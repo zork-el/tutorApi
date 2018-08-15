@@ -32,7 +32,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('12345-67890-09876-54321'));
 app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -51,29 +51,41 @@ app.use(function (req, res, next) {
 });
 
 function auth(req, res, next) {
-  console.log(req.headers);
+  console.log(req.signedCookies);
 
-  var authHeader = req.headers.authorization;
+  if (!req.signedCookies) {
+    var authHeader = req.headers.authorization;
 
-  if (!authHeader) {
-    var err = new Error("You are Not Authenticated!");
-    res.setHeader('WWW-Authenticate', 'Basic');
-    err.status = 401;
-    return next(err);
+    if (!authHeader) {
+      var err = new Error("You are Not Authenticated!");
+      res.setHeader('WWW-Authenticate', 'Basic');
+      err.status = 401;
+      return next(err);
+    }
+
+    var authUserPass = authHeader.toString().split(' ')[1]  //gets string containing username&password.
+    var auth = Buffer.from(authUserPass, 'base64').toString().split(':');    //splits authUserPass into array containing username&password.
+    var username = auth[0];
+    var password = auth[1];
+
+    if (username === 'admin' && password === 'admin') {
+      res.cookie('user', 'admin', { signed: true });
+      next();
+    } else {
+      var err = new Error("You are Not Authenticated!");
+      res.setHeader('WWW-Authenticate', 'Basic');
+      err.status = 401;
+      return next(err);
+    }
   }
-
-  var authUserPass = authHeader.toString().split(' ')[1]  //gets string containing username&password.
-  var auth = Buffer.from(authUserPass, 'base64').toString().split(':');    //splits authUserPass into array containing username&password.
-  var username = auth[0];
-  var password = auth[1];
-
-  if (username === 'admin' && password === 'admin') {
-    next();
-  } else {
-    var err = new Error("You are Not Authenticated!");
-    res.setHeader('WWW-Authenticate', 'Basic');
-    err.status = 401;
-    return next(err);
+  else {
+    if (req.signedCookies.user === 'admin') {
+      next();
+    } else {
+      var err = new Error("You are Not Authenticated!");
+      err.status = 401;
+      return next(err);
+    }
   }
 }
 
