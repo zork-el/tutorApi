@@ -43,7 +43,7 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   store: new fileStore()
-}))
+}));
 
 app.use('/', indexRouter);
 app.use('/tutor', tutorRouter);
