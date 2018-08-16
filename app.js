@@ -45,7 +45,7 @@ app.use(session({
   store: new fileStore()
 }));
 
-app.use('/', indexRouter);
+app.use('/', indexRouter);     //this works!!
 app.use('/tutor', tutorRouter);
 
 function auth(req, res, next) {
