@@ -50,6 +50,20 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Add headers
+app.use(function (req, res, next) {
+
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+  // Pass to next layer of middleware
+  next();
+});
+
 app.use('/', indexRouter);     //this works!!
 app.use('/tutor', tutorRouter);
 
@@ -67,21 +81,6 @@ function auth(req, res, next) {
 
 app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Add headers
-app.use(function (req, res, next) {
-
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-  // Pass to next layer of middleware
-  next();
-});
-
 
 app.use('/users', userRouter);
 app.use('/dishes', dishRouter);
