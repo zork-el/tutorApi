@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 var fileStore = require('session-file-store')(session);
+var passport = require('passport');
+var authenticate = require('./authenticate');
 
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/userRouter');
@@ -19,7 +21,7 @@ const Users = require('./models/users');
 const url = "mongodb+srv://optimus:optimus@tutor-cluster-0yihn.mongodb.net/test";
 const Url = "mongodb://127.0.0.1:27017/tutor"
 
-mongoose.connect(url);
+mongoose.connect(Url);
 const connection = mongoose.connection;
 
 connection.on('connected', () => {
@@ -45,25 +47,22 @@ app.use(session({
   store: new fileStore()
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);     //this works!!
 app.use('/tutor', tutorRouter);
 
 function auth(req, res, next) {
   console.log(req.session);
 
-  if (!req.session.user) {
+  if (!req.user) {
     var err = new Error("You are Not Authenticated!");
     err.status = 403;
     return next(err);
   } else {
-    if (req.session.user === 'authenticated') {
       next();
-    } else {
-      var err = new Error("You are Not Authenticated!");
-      err.status = 403;
-      return next(err);
     }
-  }
 }
 
 app.use(auth);
