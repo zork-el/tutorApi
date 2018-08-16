@@ -21,7 +21,7 @@ const Users = require('./models/users');
 const url = "mongodb+srv://optimus:optimus@tutor-cluster-0yihn.mongodb.net/test";
 const Url = "mongodb://127.0.0.1:27017/tutor"
 
-mongoose.connect(Url);
+mongoose.connect(url);
 const connection = mongoose.connection;
 
 connection.on('connected', () => {
