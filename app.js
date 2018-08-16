@@ -16,7 +16,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 const Users = require('./models/users');
-const url = "mongodb+srv://optimus:optimus@tutor-cluster-0yihn.mongodb.net/test?retryWrites=true";
+const url = "mongodb+srv://optimus:optimus@tutor-cluster-0yihn.mongodb.net/test";
 const Url = "mongodb://127.0.0.1:27017/tutor"
 
 mongoose.connect(url);
