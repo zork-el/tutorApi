@@ -27,7 +27,7 @@ userRouter.route('/')
             .catch((err) => next(err));
     })
 
-    .post(authenticate.verifyUser, (req, res, next) => {
+    .post((req, res, next) => {
         Users.create(req.body)
             .then((user) => {
                 res.statusCode = 200;
