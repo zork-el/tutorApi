@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const Users = require('../models/users')
+const Users = require('../models/users');
+const authenticate = require('./../authenticate');
 
 const userRouter = express.Router();
 
@@ -16,7 +17,7 @@ userRouter.route('/')
         next();
     })
 
-    .get((req, res, next) => {
+    .get(authenticate.verifyUser, (req, res, next) => {
         Users.find({}).exec()
             .then((users) => {
                 res.statusCode = 200;
@@ -26,7 +27,7 @@ userRouter.route('/')
             .catch((err) => next(err));
     })
 
-    .post((req, res, next) => {
+    .post(authenticate.verifyUser, (req, res, next) => {
         Users.create(req.body)
             .then((user) => {
                 res.statusCode = 200;

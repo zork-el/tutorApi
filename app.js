@@ -7,6 +7,7 @@ var session = require('express-session');
 var fileStore = require('session-file-store')(session);
 var passport = require('passport');
 var authenticate = require('./authenticate');
+var config = require('./config');
 
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/userRouter');
@@ -18,8 +19,8 @@ const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 const Users = require('./models/users');
-const url = "mongodb+srv://optimus:optimus@tutor-cluster-0yihn.mongodb.net/test";
-const Url = "mongodb://127.0.0.1:27017/tutor"
+const url = config.mongourl;
+const Url = config.mongoUrl;
 
 mongoose.connect(url);
 const connection = mongoose.connection;
@@ -39,16 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser('12345-67890-09876-54321'));
 
-app.use(session({
-  name: 'session-id',
-  secret: '12345-67890-09876-54321',
-  saveUninitialized: false,
-  resave: false,
-  store: new fileStore()
-}));
-
 app.use(passport.initialize());
-app.use(passport.session());
 
 // Add headers
 app.use(function (req, res, next) {
@@ -67,19 +59,6 @@ app.use(function (req, res, next) {
 app.use('/', indexRouter);     //this works!!
 app.use('/tutor', tutorRouter);
 
-function auth(req, res, next) {
-  console.log(req.session);
-
-  if (!req.user) {
-    var err = new Error("You are Not Authenticated!");
-    err.status = 403;
-    return next(err);
-  } else {
-      next();
-    }
-}
-
-app.use(auth);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', userRouter);

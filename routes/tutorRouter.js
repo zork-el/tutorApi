@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const tutor = require('../models/tutors');
 const tutorRouter = express.Router();
+const authenticate = require('./../authenticate');
 
 tutorRouter.use(bodyParser.json());
 
@@ -39,9 +40,10 @@ tutorRouter.route('/signup')
 tutorRouter.route('/login')
     .options((req, res) => { res.sendStatus(200); })
     .post(passport.authenticate('local'), (req, res, next) => {
+        var token = authenticate.getToken({_id: req.user._id});
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json({ success: true, status: 'You are Logged In!' });
+        res.json({ success: true, token: token, status: 'You are Logged In!' });
     });
 
 tutorRouter.route('/logout')
