@@ -27,7 +27,7 @@ userRouter.route('/')
             .catch((err) => next(err));
     })
 
-    .post((req, res, next) => {
+    .post(authenticate.verifyUser, (req, res, next) => {
         Users.create(req.body)
             .then((user) => {
                 res.statusCode = 200;
@@ -37,12 +37,12 @@ userRouter.route('/')
             .catch((err) => next(err));
     })
 
-    .put((req, res, next) => {
+    .put(authenticate.verifyUser, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /users');
     })
 
-    .delete((req, res, next) => {
+    .delete(authenticate.verifyUser, (req, res, next) => {
         Users.remove({}).exec()
             .then((resp) => {
                 res.statusCode = 200;
@@ -55,7 +55,7 @@ userRouter.route('/')
 // FOR /:DISH ID
 userRouter.route('/:userId')
     .options((req, res) => { res.sendStatus(200); })
-    .get((req, res, next) => {
+    .get(authenticate.verifyUser, (req, res, next) => {
         Users.findById(req.params.userId).exec()
             .then((user) => {
                 res.statusCode = 200;
@@ -65,12 +65,12 @@ userRouter.route('/:userId')
             .catch((err) => next(err));
     })
 
-    .post((req, res, next) => {
+    .post(authenticate.verifyUser, (req, res, next) => {
         res.statusCode = 403;
         res.end('POST operation not supported on /users/' + req.params.userId);//
     })
 
-    .put((req, res, next) => {
+    .put(authenticate.verifyUser, (req, res, next) => {
         Users.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true }).exec()
             .then((user) => {
                 res.statusCode = 200;         // Use [for (var key in Object)] to validate req.body
@@ -80,7 +80,7 @@ userRouter.route('/:userId')
             .catch((err) => next(err));
     })
 
-    .delete((req, res, next) => {
+    .delete(authenticate.verifyUser, (req, res, next) => {
         Users.findByIdAndRemove(req.params.userId).exec()
             .then((resp) => {
                 res.statusCode = 200;
