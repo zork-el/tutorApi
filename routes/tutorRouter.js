@@ -24,7 +24,7 @@ tutorRouter.route('/')
 tutorRouter.route('/exist')
     .options((req, res) => { res.sendStatus(200); })
     .post((req, res, next) => {
-        tutor.findOne({ username: req.body }).exec()
+        tutor.findOne({ username: req.body.username }).exec()
             .then((user) => {
                 if (user != null) {
                     res.statusCode = 200;
