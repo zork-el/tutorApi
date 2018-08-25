@@ -21,6 +21,25 @@ tutorRouter.route('/')
             .catch((err) => next(err));
     });
 
+tutorRouter.route('/exist')
+    .options((req, res) => { res.sendStatus(200); })
+    .post((req, res, next) => {
+        tutor.findOne({ username: req.body }).exec()
+            .then((user) => {
+                if (user != null) {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ exist: true });
+                } else {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ exist: false });
+                }
+
+            }, (err) => next(err))
+            .catch((err) => next(err));
+    });
+
 // FOR /SIGN UP
 tutorRouter.route('/signup')
     .options((req, res) => { res.sendStatus(200); })
