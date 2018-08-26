@@ -6,7 +6,31 @@ var tutorSchema = new Schema({
     admin: {
         type: Boolean,
         default: false
+    },
+    user: {
+        name: {
+            type: String,
+            required: true
+        },
+        address: {
+            type: String,
+            required: true
+        },
+        phone: {
+            type: Number,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        },
+        isEdit: {
+            type: Boolean,
+            required: false
+        }
     }
+    }, {
+        timestamps: true
 });
 
 tutorSchema.plugin(passportLocalMongoose);

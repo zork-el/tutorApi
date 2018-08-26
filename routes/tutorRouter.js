@@ -44,7 +44,7 @@ tutorRouter.route('/exist')
 tutorRouter.route('/signup')
     .options((req, res) => { res.sendStatus(200); })
     .post((req, res, next) => {
-        tutor.register(new tutor({ username: req.body.username }),
+        tutor.register(new tutor({ username: req.body.username, user: req.body.user }),
             req.body.password, (err, user) => {
                 if (err) {
                     res.statusCode = 500;
