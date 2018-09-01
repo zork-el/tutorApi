@@ -2,6 +2,19 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var passportLocalMongoose = require('passport-local-mongoose');
 
+var skillSchema = new Schema({
+    skillname: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    }
+}, {
+    timestamps: true
+    });
+
 var tutorSchema = new Schema({
     admin: {
         type: Boolean,
@@ -28,10 +41,15 @@ var tutorSchema = new Schema({
             type: Boolean,
             required: false
         }
-    }
-    }, {
+    },
+    signupComplete: {
+        type: Boolean,
+        default: false
+    },
+    skills: [skillSchema]
+}, {
         timestamps: true
-});
+    });
 
 tutorSchema.plugin(passportLocalMongoose);
 

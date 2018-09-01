@@ -62,7 +62,7 @@ userRouter.route('/:userId')
     })
 
     .put(authenticate.verifyUser, (req, res, next) => {
-        tutor.findByIdAndUpdate(req.params.userId, { $set: {user: req.body} }, { new: true }).exec()
+        tutor.findByIdAndUpdate(req.params.userId, { $set: { user: req.body } }, { new: true }).exec()
             .then((user) => {
                 res.statusCode = 200;         // Use [for (var key in Object)] to validate req.body
                 res.setHeader('Content-Type', 'application/json');
@@ -77,6 +77,20 @@ userRouter.route('/:userId')
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.json(resp);
+            }, (err) => next(err))
+            .catch((err) => next(err));
+    });
+
+userRouter.route('/:userId/skills')
+    .options((req, res) => { res.sendStatus(200); })
+    .get()
+
+    .put(authenticate.verifyUser, (req, res, next) => {
+        tutor.findByIdAndUpdate(req.params.userId, { $set: { skills: req.body } }, { new: true }).exec()
+            .then((user) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(user.skills);
             }, (err) => next(err))
             .catch((err) => next(err));
     });
