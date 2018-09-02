@@ -63,6 +63,23 @@ tutorRouter.route('/signup')
         );
     });
 
+tutorRouter.route('/forgotPw')
+    .options((req, res) => { res.sendStatus(200); })
+    .post((req, res, next) => {
+        tutor.findOne({ username: req.body.username }).exec()
+            .then((user) => {
+                if (user) {
+                    user.setPassword(req.body.password, () => {
+                        user.save();
+                        res.status(200).json({ password: req.body.password });
+                    });
+                } else {
+                    res.status(404).json({ message: "User Not Found" });
+                }
+            })
+            .catch(err => next(err));
+    });
+
 tutorRouter.route('/login')
     .options((req, res) => { res.sendStatus(200); })
     .post(passport.authenticate('local'), (req, res, next) => {
