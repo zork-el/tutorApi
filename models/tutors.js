@@ -20,6 +20,14 @@ var tutorSchema = new Schema({
         type: Boolean,
         default: false
     },
+    image: {
+        type: String,
+        default: "Path Not Set!!"
+    },
+    deletehash: {
+        type: String,
+        default: "Path Not Set!!"
+    },
     user: {
         name: {
             type: String,
