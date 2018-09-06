@@ -12,22 +12,10 @@ var skillSchema = new Schema({
         required: true
     }
 }, {
-    timestamps: true
+        timestamps: true
     });
 
 var tutorSchema = new Schema({
-    admin: {
-        type: Boolean,
-        default: false
-    },
-    image: {
-        type: String,
-        default: "Path Not Set!!"
-    },
-    deletehash: {
-        type: String,
-        default: "Path Not Set!!"
-    },
     user: {
         name: {
             type: String,
@@ -48,13 +36,25 @@ var tutorSchema = new Schema({
         isEdit: {
             type: Boolean,
             required: false
-        }
-    },
-    signupComplete: {
-        type: Boolean,
-        default: false
-    },
-    skills: [skillSchema]
+        },
+        admin: {
+            type: Boolean,
+            default: false
+        },
+        image: {
+            type: String,
+            default: "Path Not Set!!"
+        },
+        deletehash: {
+            type: String,
+            default: "Path Not Set!!"
+        },
+        signupComplete: {
+            type: Boolean,
+            default: false
+        },
+        skills: [skillSchema]
+    }
 }, {
         timestamps: true
     });
