@@ -107,33 +107,89 @@ userRouter.route('/:userId/skills')
     .options((req, res) => { res.sendStatus(200); })
     .get()
 
-    .put(authenticate.verifyUser, (req, res, next) => {
-        tutor.findByIdAndUpdate(req.params.userId, { $set: { skills: req.body } }, { new: true }).exec()
+    .post((req, res, next) => {
+        tutor.findById(req.params.userId).exec()
+            .then((user) => {
+                for(let i=0; i<req.body.length; ++i) {
+                    user.user.skills.push(req.body[i]);
+                }
+                return user.save();
+            })
             .then((user) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(user.skills);
+                res.json(user.user.skills);
             }, (err) => next(err))
             .catch((err) => next(err));
     });
+
+userRouter.route('/:userId/:skillId')
+    .options((req, res) => { res.sendStatus(200); })
+    .put((req, res, next) => {
+        tutor.findById(req.params.userId).exec()
+            .then((tutor) => {
+                if (tutor) {
+                    skill = tutor.user.skills.id(req.params.skillId);
+                    skill.set(req.body);
+                    return tutor.save();
+                } else {
+                    err.name = 404;
+                    err.message = "tutor Not Found";
+                    throw err;
+                }
+            })
+            .then((tutor) => {
+                res.status(200).json({
+                    message: "Skill Updated!",
+                    skill: tutor.user.skills.id(req.params.skillId)
+                });
+            })
+            .catch(err => next(err));
+    })
+
+    .delete((req, res, next) => {
+        tutor.findById(req.params.userId).exec()
+            .then((tutor) => {
+                if (tutor) {
+                    tutor.user.skills.id(req.params.skillId).remove();
+                    return tutor.save();
+                } else {
+                    err.name = 404;
+                    err.message = "tutor Not Found";
+                    throw err;
+                }
+            })
+            .then((tutor) => {
+                res.status(200).json({
+                    message: "Skill Deleted!",
+                    skill: tutor.user.skills.id(req.params.skillId)
+                });
+            })
+            .catch(err => next(err));
+    })
 
 userRouter.route('/:userId/image')
     .options((req, res) => { res.status(200); })
     .post(upload.single('userImage'), (req, res, next) => {
         const id = req.params.userId;
-        tutor.findByIdAndUpdate(id, { $set: { image: req.file.data.link, deletehash: req.file.data.deletehash } }, { new: true }).exec()
+        tutor.findById(id).exec()
             .then((tutor) => {
                 if (tutor) {
-                    res.status(200).json({
-                        message: "Image path set",
-                        image: tutor
-                    });
+                    tutor.user.image = req.file.data.link;
+                    tutor.user.deletehash = req.file.data.deletehash;
+                    return tutor.save();
                 } else {
-                    res.status(404).json({
-                        message: "tutor Not Found!"
-                    });
+                    err.name = 404;
+                    err.message = "tutor Not Found";
+                    throw err;
                 }
             })
+            .then((user) => {
+                      res.status(200).json({
+                           message: "Image path set",
+                          image: user
+                        });  
+                    })
             .catch(err => next(err));
     })
 
@@ -149,7 +205,7 @@ userRouter.route('/:userId/image')
             .then((tutor) => {
                 if (tutor) {
                     Obj = tutor;
-                    delUrl = delUrl + tutor.deletehash;
+                    delUrl = delUrl + tutor.user.deletehash;
                     return fetch(delUrl, {
                         method: 'delete',
                         headers: { 'Authorization': "Client-ID " + clientId }
@@ -166,8 +222,8 @@ userRouter.route('/:userId/image')
                 console.log(Obj);
                 if (data.success) {
                     console.log(Obj);
-                    Obj.image = "no path set";
-                    Obj.deletehash = "no path set";
+                    Obj.user.image = "no path set";
+                    Obj.user.deletehash = "no path set";
                     console.log(Obj);
                     return Obj.save();
                 } else {
