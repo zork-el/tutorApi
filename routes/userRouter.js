@@ -123,7 +123,7 @@ userRouter.route('/:userId/skills')
             .catch((err) => next(err));
     });
 
-userRouter.route('/:userId/:skillId')
+userRouter.route('/:userId/skills/:skillId')  // No support for route overloading i.e. "/:userId/image" && "/:userId/:skillId" is a bug!!
     .options((req, res) => { res.sendStatus(200); })
     .put((req, res, next) => {
         tutor.findById(req.params.userId).exec()
@@ -166,7 +166,7 @@ userRouter.route('/:userId/:skillId')
                 });
             })
             .catch(err => next(err));
-    })
+    });
 
 userRouter.route('/:userId/image')
     .options((req, res) => { res.status(200); })
