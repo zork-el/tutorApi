@@ -3,6 +3,10 @@ var Schema = mongoose.Schema;
 var passportLocalMongoose = require('passport-local-mongoose');
 
 var skillSchema = new Schema({
+    isActive: {
+        type: Boolean,
+        default: false
+    },
     skillname: {
         type: String,
         required: true
