@@ -169,7 +169,7 @@ userRouter.route('/:userId/skills/:skillId')  // No support for route overloadin
     });
 
 userRouter.route('/:userId/image')
-    .options((req, res) => { res.status(200); })
+    .options((req, res) => { res.sendStatus(200); })
     .post(upload.single('userImage'), (req, res, next) => {
         const id = req.params.userId;
         tutor.findById(id).exec()
