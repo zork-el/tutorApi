@@ -47,11 +47,11 @@ var tutorSchema = new Schema({
         },
         image: {
             type: String,
-            default: "Path Not Set!!"
+            default: "no path set"
         },
         deletehash: {
             type: String,
-            default: "Path Not Set!!"
+            default: "no path set"
         },
         signupComplete: {
             type: Boolean,
