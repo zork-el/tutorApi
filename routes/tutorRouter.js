@@ -95,7 +95,7 @@ tutorRouter.route('/login')
 
 tutorRouter.route('/tokenLogin')
     .options((req, res) => { res.sendStatus(200); })
-    .post(authenticate.verifyUser, (req, res, next) => {
+    .get(authenticate.verifyUser, (req, res, next) => {
         userData = {
             user: req.user.user,
             username: req.user.username,
