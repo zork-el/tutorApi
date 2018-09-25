@@ -222,7 +222,7 @@ userRouter.route('/:userId/image')
                 console.log(Obj);
                 if (data.success) {
                     console.log(Obj);
-                    Obj.user.image = null;
+                    Obj.user.image = "https://picsum.photos/300/200";
                     Obj.user.deletehash = "no path set";
                     console.log(Obj);
                     return Obj.save();
@@ -234,7 +234,7 @@ userRouter.route('/:userId/image')
             })
             .then((savedtutor) => res.status(200).json({
                 message: "tutor Image Deleted!!",
-                savedtutor: savedtutor
+                savedtutor: {image: savedtutor.user.image, deletehash: savedtutor.user.deletehash}
             })
             )
             .catch(err => next(err));
