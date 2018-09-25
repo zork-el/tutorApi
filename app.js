@@ -1,19 +1,14 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var session = require('express-session');
-var fileStore = require('session-file-store')(session);
 var passport = require('passport');
 var authenticate = require('./authenticate');
 var config = require('./config');
 
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/userRouter');
-var dishRouter = require('./routes/dishRouter');
 var tutorRouter = require('./routes/tutorRouter');
-var leaderRouter = require('./routes/leaderRouter');
 
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
@@ -62,8 +57,6 @@ app.use('/tutor', tutorRouter);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', userRouter);
-app.use('/dishes', dishRouter);
-app.use('/leaders', leaderRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

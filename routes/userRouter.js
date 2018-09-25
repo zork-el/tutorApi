@@ -222,7 +222,7 @@ userRouter.route('/:userId/image')
                 console.log(Obj);
                 if (data.success) {
                     console.log(Obj);
-                    Obj.user.image = "no path set";
+                    Obj.user.image = null;
                     Obj.user.deletehash = "no path set";
                     console.log(Obj);
                     return Obj.save();

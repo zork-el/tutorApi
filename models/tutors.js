@@ -47,7 +47,7 @@ var tutorSchema = new Schema({
         },
         image: {
             type: String,
-            default: "no path set"
+            default: "https://picsum.photos/300/200"
         },
         deletehash: {
             type: String,

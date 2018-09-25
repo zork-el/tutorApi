@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const passport = require('passport');
 const tutor = require('../models/tutors');
 const tutorRouter = express.Router();
@@ -92,6 +91,19 @@ tutorRouter.route('/login')
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json({ tokenData: { success: true, token: token, status: 'You are Logged In!' }, userData: userData });
+    });
+
+tutorRouter.route('/tokenLogin')
+    .options((req, res) => { res.sendStatus(200); })
+    .post(authenticate.verifyUser, (req, res, next) => {
+        userData = {
+            user: req.user.user,
+            username: req.user.username,
+            _id: req.user._id
+        };
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({ tokenData: { success: true, status: 'You are Logged In!' }, userData: userData });
     });
 
 tutorRouter.route('/logout')
