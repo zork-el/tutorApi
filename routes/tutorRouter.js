@@ -74,7 +74,7 @@ tutorRouter.route('/forgotPwExist')
                 if (user != null) {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
-                    res.json({ security: security });
+                    res.json({ security: user });
                 } else {
                     res.statusCode = 404;
                     res.setHeader('Content-Type', 'application/json');
