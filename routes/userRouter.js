@@ -41,7 +41,7 @@ userRouter.route('/')
     })
 
     .get(authenticate.verifyUser, (req, res, next) => {
-        tutor.find({}).exec()
+        tutor.find({}).select('_id user').exec()
             .then((users) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
