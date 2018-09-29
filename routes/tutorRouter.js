@@ -90,10 +90,14 @@ tutorRouter.route('/forgotPw')
         tutor.findOne({ username: req.body.username }).exec()
             .then((user) => {
                 if (user) {
-                    user.setPassword(req.body.password, () => {
-                        user.save();
-                        res.status(200).json({ password: req.body.password });
-                    });
+                    if (user.security.answer === req.body.answer) {
+                        user.setPassword(req.body.password, () => {
+                            user.save();
+                            res.status(200).json({ password: req.body.password });
+                        });
+                    } else {
+                        res.status(401).json({ message: "Something Went Wrong" })
+                    }
                 } else {
                     res.status(404).json({ message: "User Not Found!" });
                 }
