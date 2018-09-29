@@ -11,7 +11,7 @@ tutorRouter.use(bodyParser.json());
 tutorRouter.route('/')
     .options((req, res) => { res.sendStatus(200); })
     .get((req, res, next) => {
-        tutor.find({}).exec()
+        tutor.find({}).select('_id user').exec()
             .then((tutors) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -34,7 +34,6 @@ tutorRouter.route('/exist')
                     res.setHeader('Content-Type', 'application/json');
                     res.json({ exist: false });
                 }
-
             }, (err) => next(err))
             .catch((err) => next(err));
     });
@@ -43,7 +42,7 @@ tutorRouter.route('/exist')
 tutorRouter.route('/signup')
     .options((req, res) => { res.sendStatus(200); })
     .post((req, res, next) => {
-        tutor.register(new tutor({ username: req.body.username, user: req.body.user }),
+        tutor.register(new tutor({ username: req.body.username, user: req.body.user, security: req.body.security }),
             req.body.password, (err, user) => {
                 if (err) {
                     res.statusCode = 500;
@@ -67,6 +66,24 @@ tutorRouter.route('/signup')
         );
     });
 
+tutorRouter.route('/forgotPwExist')
+    .options((req, res) => { res.sendStatus(200); })
+    .post((req, res, next) => {
+        tutor.findOne({ username: req.body.username }).select('security').exec()
+            .then((user) => {
+                if (user != null) {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ security: security });
+                } else {
+                    res.statusCode = 404;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ message: "User Not Found!" });
+                }
+            }, (err) => next(err))
+            .catch((err) => next(err));
+    });
+
 tutorRouter.route('/forgotPw')
     .options((req, res) => { res.sendStatus(200); })
     .post((req, res, next) => {
@@ -78,7 +95,7 @@ tutorRouter.route('/forgotPw')
                         res.status(200).json({ password: req.body.password });
                     });
                 } else {
-                    res.status(404).json({ message: "User Not Found" });
+                    res.status(404).json({ message: "User Not Found!" });
                 }
             })
             .catch(err => next(err));
