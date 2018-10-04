@@ -42,7 +42,7 @@ tutorRouter.route('/exist')
 tutorRouter.route('/signup')
     .options((req, res) => { res.sendStatus(200); })
     .post((req, res, next) => {
-        tutor.register(new tutor({ username: req.body.username, user: req.body.user, security: req.body.security }),
+        tutor.register(new tutor({ username: req.body.username, user: req.body.user, security: req.body.security, usertype: req.body.usertype }),
             req.body.password, (err, user) => {
                 if (err) {
                     res.statusCode = 500;
@@ -55,6 +55,7 @@ tutorRouter.route('/signup')
                         userData = {
                             user: req.user.user,
                             username: req.user.username,
+                            type: req.user.usertype,
                             _id: req.user._id
                         };
                         res.statusCode = 200;
@@ -112,6 +113,7 @@ tutorRouter.route('/login')
         userData = {
             user: req.user.user,
             username: req.user.username,
+            type: req.user.usertype,
             _id: req.user._id
         };
         res.statusCode = 200;
@@ -125,6 +127,7 @@ tutorRouter.route('/tokenLogin')
         userData = {
             user: req.user.user,
             username: req.user.username,
+            type: req.user.usertype,
             _id: req.user._id
         };
         res.statusCode = 200;

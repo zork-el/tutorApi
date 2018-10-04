@@ -1,7 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const Users = require('../models/users');
 const authenticate = require('./../authenticate');
 const tutor = require('../models/tutors');
 const clientId = '69159da709273a3';
@@ -19,7 +17,7 @@ const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
     } else {
-        cb(new Error('What the fuck was that?!!'));
+        cb(new Error('What was that?!!'));
     }
 };
 
@@ -41,7 +39,7 @@ userRouter.route('/')
     })
 
     .get(authenticate.verifyUser, (req, res, next) => {
-        tutor.find({}).select('_id user').exec()
+        tutor.find({ usertype: 'tutor' }).select('_id user').exec()
             .then((users) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
